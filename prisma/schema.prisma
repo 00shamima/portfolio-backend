@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+}
+
+model Home {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  subtitle  String?
+  heroImage String?     // file path in uploads/
+  createdAt DateTime @default(now())
+}
+
+model About {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  content     String
+  resumePath  String?   // path to resume file in uploads/
+  createdAt   DateTime @default(now())
+}
+
+// NEW ENUM FOR SKILL CATEGORIES
+enum SkillCategory {
+  FRONTEND
+  BACKEND
+  DATABASE
+  TOOLS
+}
+
+model Skill {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  level     Int?      // e.g., 1-100 or percentage
+  iconPath  String?
+  category  SkillCategory // <-- NEW: Categorization field
+  createdAt DateTime @default(now())
+}
+// ---------------------------------------------
+
+model Experience {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  company     String
+  role        String
+  startDate   DateTime
+  endDate     DateTime?
+  description String?
+  createdAt   DateTime @default(now())
+
+}
+
+model Project {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  techStack   String[]
+  repoLink    String?
+  demoLink    String?
+  featured    Boolean @default(false)
+  images      String[]   // paths in uploads/
+  createdAt   DateTime @default(now())
+}
+
+model Contact {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+}
