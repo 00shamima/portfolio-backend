@@ -20,24 +20,28 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// --- FIXED CORS CONFIGURATION ---
-// Explicitly allow both your Portfolio (5173) and Admin Panel (5174)
+// --- UPDATED CORS CONFIGURATION ---
 const allowedOrigins = [
   "http://localhost:5173", 
-  "http://localhost:5174"
+  "http://localhost:5174",
+  "https://portfolio-backend-y330.onrender.com" // Your specific Render URL from logs
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl)
+    // Allow requests with no origin (like mobile apps)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
+    
+    // Check if the origin is in our allowed list
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    } else {
+      console.log("CORS Blocked Origin:", origin);
       return callback(new Error('CORS policy mismatch'), false);
     }
-    return callback(null, true);
   },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true,
+  credentials: true, // Crucial for your apiService settings
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
@@ -61,5 +65,5 @@ app.use("/api/experience", experienceRoutes);
 app.use("/api/skills", skillRoutes);
 app.use("/api/contact", contactRoutes);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000; // Render usually uses port 10000
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
