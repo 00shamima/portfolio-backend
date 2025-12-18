@@ -6,19 +6,14 @@ import dotenv from "dotenv";
 // Load environment variables from .env file
 dotenv.config(); 
 
-// --- Configuration Check ---
-// IMPORTANT: Ensure your .env file has a JWT_SECRET defined!
-// If this is missing, the login token generation will fail silently or crash.
+
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
     console.error("FATAL ERROR: JWT_SECRET is not defined in the environment variables.");
     // In a production app, you might crash the process here: process.exit(1);
 }
 
-/**
- * Handles user registration (POST /api/auth/register)
- * Creates a new user in the database with a hashed password.
- */
+
 export const register = async (req, res) => {
     try {
         const { name, email, password, role } = req.body;

@@ -5,6 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
+    "build": "npm install && npx prisma generate",
     "dev": "nodemon src/server.js"
   },
   "dependencies": {

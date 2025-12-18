@@ -2,6 +2,10 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs"; 
+
+// Import Routes
 import authRoutes from "./routes/auth.routes.js";
 import projectRoutes from "./routes/project.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
@@ -13,26 +17,49 @@ import skillRoutes from "./routes/skill.routes.js";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// --- FIXED CORS CONFIGURATION ---
+// Explicitly allow both your Portfolio (5173) and Admin Panel (5174)
+const allowedOrigins = [
+  "http://localhost:5173", 
+  "http://localhost:5174"
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error('CORS policy mismatch'), false);
+    }
+    return callback(null, true);
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// serve uploads publicly
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+// Serve uploads
+const uploadDir = path.join(process.cwd(), "uploads");
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+app.use("/uploads", express.static(uploadDir));
 
-// routes
+// Health Check
+app.get("/", (req, res) => res.send("Backend is running successfully!"));
+
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
-//app.use("/api/contacts", contactRoutes);
 app.use("/api/home", homeRoutes);
 app.use("/api/about", aboutRoutes);
 app.use("/api/experience", experienceRoutes);
 app.use("/api/skills", skillRoutes);
 app.use("/api/contact", contactRoutes);
 
-// add other route registrations: /api/home, /api/about, /api/skills, /api/experience
-
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
