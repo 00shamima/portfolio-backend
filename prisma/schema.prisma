@@ -25,10 +25,12 @@ model Home {
 }
 
 model About {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  content     String
-  resumePath  String?   // path to resume file in uploads/
-  createdAt   DateTime @default(now())
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  content         String   // General About Content
+  frontendFocus   String?  // New Field 1
+  performance     String?  // New Field 2
+  resumePath      String?  
+  createdAt       DateTime @default(now())
 }
 
 // NEW ENUM FOR SKILL CATEGORIES
@@ -50,14 +52,23 @@ model Skill {
 // ---------------------------------------------
 
 model Experience {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  company     String
-  role        String
-  startDate   DateTime
-  endDate     DateTime?
-  description String?
-  createdAt   DateTime @default(now())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  company     String
+  role        String
+  startDate   DateTime
+  endDate     DateTime?
+  description String?
+  createdAt   DateTime @default(now())
+}
 
+model Education {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  institution String
+  degree      String
+  startDate   DateTime
+  endDate     DateTime?
+  description String?
+  createdAt   DateTime @default(now())
 }
 
 model Project {
