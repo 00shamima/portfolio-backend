@@ -20,19 +20,19 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// --- UPDATED CORS CONFIGURATION ---
+// --- UPDATED CORS CONFIGURATION FOR GITHUB PAGES ---
 const allowedOrigins = [
   "http://localhost:5173", 
-  "http://localhost:5174",
-  "https://portfolio-backend-y330.onrender.com" // Your specific Render URL from logs
+  "http://localhost:5174", 
+  "https://00shamima.github.io", // Unga live Admin Panel URL
+  "https://00shamima.github.io/admin-frontend" // Full path protection
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps)
+    // Postman matrum server requests-ai allow seiyum
     if (!origin) return callback(null, true);
     
-    // Check if the origin is in our allowed list
     if (allowedOrigins.indexOf(origin) !== -1) {
       return callback(null, true);
     } else {
@@ -41,7 +41,7 @@ app.use(cors({
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true, // Crucial for your apiService settings
+  credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
@@ -65,5 +65,5 @@ app.use("/api/experience", experienceRoutes);
 app.use("/api/skills", skillRoutes);
 app.use("/api/contact", contactRoutes);
 
-const PORT = process.env.PORT || 10000; // Render usually uses port 10000
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
